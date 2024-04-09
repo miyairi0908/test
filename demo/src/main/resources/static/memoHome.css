@@ -1,0 +1,40 @@
+/* styles.css */
+.create {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.sort {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 800px;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+/* 列ごとの幅を指定 */
+th.col1 {
+    width: 60%;
+    /* 1番目の列の幅 */
+}
+
+th.col2 {
+    width: 25%;
+    /* 2番目の列の幅 */
+}
+
+th.col3 {
+    width: 15%;
+    /* 3番目の列の幅 */
+}

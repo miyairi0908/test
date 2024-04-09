@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>詳細画面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="memo.css">
+    <link rel="stylesheet" type="text/css" href="memoDetail.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>詳細</h1>
+        <div>
+            <label>タイトル</label>
+            <input id="title" type="text" th:value="${session.memo.title}" readonly>
+        </div>
+        <div>
+            <label>内容</label>
+            <textarea id="content" th:text="${session.memo.content}" rows="10"></textarea>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('content').readOnly = true;
+                });
+            </script>
+        </div>
+        <button class="button1" onclick="window.location.href='/toUpdate'">編集</button>
+        <button class="button2" onclick="window.location.href='/toHome'">戻る</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>登録画面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="memo.css">
+    <link rel="stylesheet" type="text/css" href="memoCreate.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>新規作成</h1>
+        <form th:action="@{/createMemo}" th:object="${memo}" method="post">
+            <div>
+                <label>タイトル</label>
+                <input id="title" type="text" th:field="*{title}" maxlength="20">
+            </div>
+            <div>
+                <label>内容</label>
+                <textarea id="content" th:field="*{content}" rows=" 10" maxlength="400"></textarea>
+            </div>
+            <button class="button1" type="submit">作成</button>
+        </form>
+        <button class="button2" onclick="window.location.href='/toHome'">キャンセル</button>
+    </div>
+</body>
+
+</html>
