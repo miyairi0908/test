@@ -25,7 +25,7 @@ public class MemoController {
 
 	// ホーム画面
 	@RequestMapping("/")
-	String index(HttpSession session, Model model) {
+	public String index(HttpSession session, Model model) {
 		session.invalidate();
 
 		model.addAttribute("sortMemoList", findAll());
@@ -60,7 +60,6 @@ public class MemoController {
 	// 詳細表示
 	@PostMapping("/select")
 	public String selectMemo(@RequestParam("id") int id, HttpSession session, MemoEntity memoEntity) {
-		// memoEntity = memoService.selectMemo(id);
 		// 検索
 		memoEntity = memoRepository.findById(id);
 
@@ -78,7 +77,8 @@ public class MemoController {
 			memoEntity.setTitle(memo.getTitle());
 			memoEntity.setContent(memo.getContent());
 
-			memoEntity.setCreate_time(new Timestamp(System.currentTimeMillis()));
+			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+			memoEntity.setCreate_time(currentTime);
 
 			// 登録
 			memoRepository.save(memoEntity);
@@ -91,12 +91,14 @@ public class MemoController {
 	// 更新
 	@PostMapping("/update")
 	public String updateMemo(@RequestParam("id") int id, HttpSession session, MemoEntity memoEntity, Memo memo) {
-
 		memoEntity = memoRepository.findById(id);
-		if (!memoEntity.getTitle().equals(memo.getTitle()) || !memoEntity.getContent().equals(memo.getContent())) {
+
+		if (!(memo.getTitle().isEmpty())) {
 			memoEntity.setTitle(memo.getTitle());
 			memoEntity.setContent(memo.getContent());
-			memoEntity.setCreate_time(new Timestamp(System.currentTimeMillis()));
+
+			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+			memoEntity.setCreate_time(currentTime);
 
 			// 更新
 			memoRepository.save(memoEntity);
@@ -105,8 +107,11 @@ public class MemoController {
 			memoEntity = memoRepository.findById(id);
 
 			session.setAttribute("memo", memoEntity);
+
+			return "memoDetail";
+		} else {
+			return "memoEdit";
 		}
-		return "memoDetail";
 	}
 
 	// 削除
@@ -141,8 +146,8 @@ public class MemoController {
 	}
 
 	// 全件検索(jdbcTemplate)
-	public List<MemoEntity> getAllMemo() {
-		List<MemoEntity> memolist = memoService.getAllMemo();
-		return memolist;
-	}
+	// public List<MemoEntity> getAllMemo() {
+	// List<MemoEntity> memolist = memoService.getAllMemo();
+	// return memolist;
+	// }
 }

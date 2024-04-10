@@ -23,7 +23,7 @@ public class DataAccessApplication {
                 + "WHERE id = ?";
 
         // 検索実行
-        List<MemoEntity> result = jdbcTemplate.query(query, new ObjectRowMapper() ,id);
+        List<MemoEntity> result = jdbcTemplate.query(query, new ObjectRowMapper(), id);
         return result.get(0);
     }
 
@@ -41,26 +41,27 @@ public class DataAccessApplication {
     }
 
     // メモの登録
-    public void insertMemo(String title, String content) {
+    public int insertMemo(String title, String content) {
 
         // INSERT文
         String query = "INSERT INTO memo(title,content) "
                 + "VALUES(?,?)";
 
         // 検索実行
-        jdbcTemplate.update(query, title, content);
+        return jdbcTemplate.update(query, title, content);
 
     }
 
     // メモの削除
-    public void deleteMemo(int id) {
+    public int deleteMemo(int id) {
 
         // DELETE文
         String query = "DELETE FROM memo "
                 + "WHERE id = ?";
 
         // 検索実行
-        jdbcTemplate.update(query, id);
+        System.out.println(jdbcTemplate.update(query, id));
+        return 1;
 
     }
 

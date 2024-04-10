@@ -1,14 +1,17 @@
 /* styles.css */
+
 .create {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 50px;
+    width: 35px;
+    height: 35px;
 }
 
 .sort {
     position: absolute;
     top: 80px;
-    right: 20px;
+    right: 40px;
 }
 
 table {
@@ -23,18 +26,40 @@ td {
     text-align: left;
 }
 
-/* 列ごとの幅を指定 */
 th.col1 {
-    width: 60%;
-    /* 1番目の列の幅 */
+    width: 480px;
+}
+
+td.col1 {
+    width: 480px;
 }
 
 th.col2 {
-    width: 25%;
-    /* 2番目の列の幅 */
+    width: 150px;
+}
+
+td.col2 {
+    width: 150px;
 }
 
 th.col3 {
-    width: 15%;
-    /* 3番目の列の幅 */
+    width: 100px;
+}
+
+td.col3 {
+    width: 100px;
+}
+
+thead {
+    display: block;
+}
+
+tbody {
+    display: block;
+    overflow-y: scroll;
+    height: 345px;
+}
+
+.create:hover {
+    cursor: pointer;
 }

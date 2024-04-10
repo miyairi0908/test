@@ -17,6 +17,8 @@ public class MemoService {
     @Autowired
     private DataAccessApplication daa;
 
+    private static int SQL_OK = 1;
+
     public MemoEntity selectMemo(int id) {
         // 参照
         MemoEntity memoEntity = daa.findMemo(id);
@@ -30,14 +32,22 @@ public class MemoService {
         return listMemo;
     }
 
-    public void createMemo(String title, String content) {
+    public Boolean createMemo(String title, String content) {
         // 登録
-        daa.insertMemo(title, content);
+        if (SQL_OK == daa.insertMemo(title, content)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void deleteMemo(int id) {
+    public Boolean deleteMemo(int id) {
         // 削除
-        daa.deleteMemo(id);
+        if (SQL_OK == daa.deleteMemo(id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<MemoEntity> sort(List<MemoEntity> memoList, String key, String direction) {

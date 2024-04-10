@@ -10,15 +10,15 @@
 
 <body>
     <div class="container">
-        <h1>詳細</h1>
+        <h1></h1>
         <form th:action="@{/update}" method="post">
             <div>
                 <label>タイトル</label>
-                <input id="title" type="text" th:value="${session.memo.title}" name="title" maxlength="20">
+                <input id="title" type="text" th:value="${session.memo.title}" name="title" maxlength="30">
             </div>
             <div>
                 <label>内容</label>
-                <textarea id="content" th:text="${session.memo.content}" name="content" rows="10"
+                <textarea id="content" th:text="${session.memo.content}" name="content" rows="20"
                     maxlength="400"></textarea>
             </div>
             <input type="hidden" name="id" th:value="${session.memo.id}" />

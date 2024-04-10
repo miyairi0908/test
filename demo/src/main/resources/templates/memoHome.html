@@ -10,8 +10,11 @@
 
 <body>
     <div class="container">
-        <button class="create" onclick="window.location.href='/toMemoCreate'">新規作成</button>
-        <h1>一覧</h1>
+        <div>
+            <img src="images/create.png" alt="Button Image" class="create"
+                onclick="window.location.href='/toMemoCreate'">
+        </div>
+        <h1>メモ</h1>
         <div class=" sort">
             <form th:action="@{/sort}" method="get">
                 <select id="sortKey" name="sortKey">
@@ -27,31 +30,33 @@
                 <button type="submit">ソート</button>
             </form>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th class="col1">タイトル</th>
-                    <th class="col2">更新日時</th>
-                    <th class="col3"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="object : ${sortMemoList}">
-                    <td th:text="${object.title}"></td>
-                    <td th:text="${#dates.format(object.create_time, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td>
-                        <form th:action="@{/select}" method="post" style="display: inline;">
-                            <input type="hidden" name="id" th:value="${object.id}" />
-                            <button type="submit">参照</button>
-                        </form>
-                        <form th:action="@{/delete}" method="post" style="display: inline;">
-                            <input type="hidden" name="id" th:value="${object.id}" />
-                            <button type="submit">削除</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col1">タイトル</th>
+                        <th class="col2">更新日時</th>
+                        <th class="col3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="object : ${sortMemoList}">
+                        <td class="col1" th:text="${object.title}"></td>
+                        <td class="col2" th:text="${#dates.format(object.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td class="col3">
+                            <form th:action="@{/select}" method="post" style="display: inline;">
+                                <input type="hidden" name="id" th:value="${object.id}" />
+                                <button type="submit">参照</button>
+                            </form>
+                            <form th:action="@{/delete}" method="post" style="display: inline;">
+                                <input type="hidden" name="id" th:value="${object.id}" />
+                                <button type="submit">削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 
