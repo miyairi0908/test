@@ -12,9 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,19 +29,17 @@ import com.example.demo.service.MemoService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class DemoApplicationTests {
 
 	@InjectMocks
 	private MemoController memoController;
-
 	@Mock
 	private MemoRepository memoRepository;
-
-	@MockBean
+	@Mock
 	private MemoService memoService;
 
 	private AutoCloseable closeable;
-
 	private MockMvc mvc;
 
 	@BeforeEach
@@ -76,16 +75,18 @@ public class DemoApplicationTests {
 		}
 	}
 
-	@Test
-	public void testToUpdate() {
-		try {
-			mvc.perform(MockMvcRequestBuilders.get("/toUpdate"))
-					.andExpect(MockMvcResultMatchers.status().isOk())
-					.andExpect(MockMvcResultMatchers.view().name("memoEdit"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * @Test
+	 * public void testToUpdate() {
+	 * try {
+	 * mvc.perform(MockMvcRequestBuilders.get("/toUpdate"))
+	 * .andExpect(MockMvcResultMatchers.status().isOk())
+	 * .andExpect(MockMvcResultMatchers.view().name("memoEdit"));
+	 * } catch (Exception e) {
+	 * e.printStackTrace();
+	 * }
+	 * }
+	 */
 
 	@Test
 	public void testToHome() {
@@ -98,16 +99,18 @@ public class DemoApplicationTests {
 		}
 	}
 
-	@Test
-	public void testToDetail() {
-		try {
-			mvc.perform(MockMvcRequestBuilders.get("/toDetail"))
-					.andExpect(MockMvcResultMatchers.status().isOk())
-					.andExpect(MockMvcResultMatchers.view().name("memoDetail"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * @Test
+	 * public void testToDetail() {
+	 * try {
+	 * mvc.perform(MockMvcRequestBuilders.get("/toDetail"))
+	 * .andExpect(MockMvcResultMatchers.status().isOk())
+	 * .andExpect(MockMvcResultMatchers.view().name("memoDetail"));
+	 * } catch (Exception e) {
+	 * e.printStackTrace();
+	 * }
+	 * }
+	 */
 
 	@Test
 	public void testSelectMemo() {
@@ -119,7 +122,8 @@ public class DemoApplicationTests {
 					.param("id", "1"))
 					.andExpect(MockMvcResultMatchers.status().isOk())
 					.andExpect(MockMvcResultMatchers.request().sessionAttribute("memo", memoEntity()))
-					.andExpect(MockMvcResultMatchers.view().name("memoDetail"));
+					.andExpect(MockMvcResultMatchers.request().sessionAttribute("memo", memoEntity()))
+					.andExpect(MockMvcResultMatchers.view().name("memoEdit"));
 
 			Mockito.verify(memoRepository, Mockito.times(1)).findById(Mockito.anyInt());
 		} catch (Exception e) {
@@ -131,13 +135,16 @@ public class DemoApplicationTests {
 	public void testCreateMemo() {
 		// Mock 条件あり
 		Mockito.when(memoRepository.save(Mockito.any())).thenReturn(memoEntity());
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("");
+		Mockito.when(memoService.chkContent(Mockito.anyString())).thenReturn("");
 
 		String formData = "title=title&content=content";
 
 		try {
 			mvc.perform(MockMvcRequestBuilders.post("/createMemo")
 					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-					.content(formData))
+					.content(formData)
+					.session(setSession()))
 					.andExpect(MockMvcResultMatchers.status().isOk())
 					.andExpect(MockMvcResultMatchers.view().name("memoHome"));
 
@@ -148,12 +155,32 @@ public class DemoApplicationTests {
 	}
 
 	@Test
-	public void testCreateMemo_Error() {
+	public void testCreateMemo_Error_title() {
 		String formData = "title=&content=content";
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("error");
 
 		try {
 			mvc.perform(MockMvcRequestBuilders.post("/createMemo")
 					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(setSession())
+					.content(formData))
+					.andExpect(MockMvcResultMatchers.status().isOk())
+					.andExpect(MockMvcResultMatchers.view().name("memoCreate"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testCreateMemo_Error_content() {
+		String formData = "title=title&content=content";
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("");
+		Mockito.when(memoService.chkContent(Mockito.anyString())).thenReturn("error");
+
+		try {
+			mvc.perform(MockMvcRequestBuilders.post("/createMemo")
+					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(setSession())
 					.content(formData))
 					.andExpect(MockMvcResultMatchers.status().isOk())
 					.andExpect(MockMvcResultMatchers.view().name("memoCreate"));
@@ -166,6 +193,8 @@ public class DemoApplicationTests {
 	public void testUpdateMemo() {
 		// Mock 条件あり
 		Mockito.when(memoRepository.save(Mockito.any())).thenReturn(memoEntity());
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("");
+		Mockito.when(memoService.chkContent(Mockito.anyString())).thenReturn("");
 
 		// Mock
 		Mockito.when(memoRepository.findById(Mockito.anyInt())).thenReturn(memoEntity());
@@ -176,11 +205,12 @@ public class DemoApplicationTests {
 			mvc.perform(MockMvcRequestBuilders.post("/update")
 					.param("id", "1")
 					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(setSession())
 					.content(formData))
 					.andExpect(MockMvcResultMatchers.status().isOk())
-					.andExpect(MockMvcResultMatchers.view().name("memoDetail"));
+					.andExpect(MockMvcResultMatchers.view().name("memoHome"));
 
-			Mockito.verify(memoRepository, Mockito.times(2)).findById(Mockito.anyInt());
+			Mockito.verify(memoRepository, Mockito.times(1)).findById(Mockito.anyInt());
 			Mockito.verify(memoRepository).save(Mockito.any());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,9 +218,9 @@ public class DemoApplicationTests {
 	}
 
 	@Test
-	public void testUpdateMemo_Error() {
+	public void testUpdateMemo_Error_title() {
 		// Mock
-		Mockito.when(memoRepository.findById(Mockito.anyInt())).thenReturn(memoEntity());
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("error");
 
 		String formData = "title=&content=content";
 
@@ -198,6 +228,28 @@ public class DemoApplicationTests {
 			mvc.perform(MockMvcRequestBuilders.post("/update")
 					.param("id", "1")
 					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(setSession())
+					.content(formData))
+					.andExpect(MockMvcResultMatchers.status().isOk())
+					.andExpect(MockMvcResultMatchers.view().name("memoEdit"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testUpdateMemo_Error_content() {
+		// Mock
+		Mockito.when(memoService.chkTitle(Mockito.anyString())).thenReturn("");
+		Mockito.when(memoService.chkContent(Mockito.anyString())).thenReturn("error");
+
+		String formData = "title=&content=content";
+
+		try {
+			mvc.perform(MockMvcRequestBuilders.post("/update")
+					.param("id", "1")
+					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(setSession())
 					.content(formData))
 					.andExpect(MockMvcResultMatchers.status().isOk())
 					.andExpect(MockMvcResultMatchers.view().name("memoEdit"));
@@ -252,8 +304,32 @@ public class DemoApplicationTests {
 
 	public List<MemoEntity> memoList() {
 		List<MemoEntity> memoList = new ArrayList<>();
-		memoList.add(memoEntity());
+
+		MemoEntity memo1 = new MemoEntity();
+		memo1.setId(1);
+		memo1.setTitle("title1");
+		memo1.setContent("content");
+		memo1.setCreate_time(Timestamp.valueOf("2024-04-10 09:00:00.01"));
+		memoList.add(memo1);
+
+		MemoEntity memo2 = new MemoEntity();
+		memo2.setId(2);
+		memo2.setTitle("title2");
+		memo2.setContent("content");
+		memo2.setCreate_time(Timestamp.valueOf("2024-04-11 09:00:00.01"));
+		memoList.add(memo2);
+
+		for (MemoEntity m : memoList) {
+			System.out.println("id:" + m.getId());
+		}
+
 		return memoList;
 	}
 
+	public MockHttpSession setSession() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("memo", memoEntity());
+		session.setAttribute("sortMemoList", memoList());
+		return session;
+	}
 }

@@ -14,7 +14,8 @@
         <form th:action="@{/update}" method="post">
             <div>
                 <label>タイトル</label>
-                <input id="title" type="text" th:value="${session.memo.title}" name="title" maxlength="30">
+                <input id="title" type="text" th:value="${session.memo.title}" name="title" maxlength="30"
+                    autocomplete="off">
             </div>
             <div>
                 <label>内容</label>
@@ -22,9 +23,13 @@
                     maxlength="400"></textarea>
             </div>
             <input type="hidden" name="id" th:value="${session.memo.id}" />
-            <button class="button1" type="submit">更新</button>
+            <button class="button1" type="submit">保存</button>
         </form>
-        <button class="button2" onclick="window.location.href='/toDetail'">戻る</button>
+        <button class="button2" onclick="window.location.href='/toHome'">戻る</button>
+        <!-- メッセージ -->
+        <div>
+            <p class="message" th:text="${message}"></p>
+        </div>
     </div>
 </body>
 

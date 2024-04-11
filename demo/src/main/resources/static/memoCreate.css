@@ -12,6 +12,7 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
+    background-color: #ffffcc;
     margin-left: 20px;
 }
 
@@ -22,15 +23,17 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
+    background-color: #ffffcc;
     margin-left: 20px;
+    font-family: Arial, sans-serif;
 }
 
 .button1 {
-    left: 630px;
+    left: 700px;
     position: absolute;
 }
 
 .button2 {
-    left: 680px;
+    left: 750px;
     position: absolute;
 }

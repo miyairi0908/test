@@ -1,17 +1,22 @@
 /* styles.css */
 
+.dataArea {
+    position: absolute;
+    top: 90px;
+}
+
 .create {
     position: absolute;
-    top: 30px;
+    top: 55px;
     right: 50px;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 
 .sort {
     position: absolute;
-    top: 80px;
-    right: 40px;
+    top: 55px;
+    left: 30px;
 }
 
 table {
@@ -58,6 +63,7 @@ tbody {
     display: block;
     overflow-y: scroll;
     height: 345px;
+    border: 1px solid #000000;
 }
 
 .create:hover {

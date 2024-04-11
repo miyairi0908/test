@@ -1,16 +1,29 @@
 /* styles.css */
 .container {
     width: 800px;
-    height: 500px;
+    height: 520px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #ffffcc;
     margin-left: 20px;
     position: relative;
 }
 
 button:hover {
     cursor: pointer;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.message {
+    position: absolute;
+    top: 510px;
+    left: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 10pt;
+    color: red;
 }

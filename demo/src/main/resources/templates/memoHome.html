@@ -11,26 +11,29 @@
 <body>
     <div class="container">
         <div>
-            <img src="images/create.png" alt="Button Image" class="create"
-                onclick="window.location.href='/toMemoCreate'">
+            <h1></h1>
+            <div>
+                <img src="images/create.png" alt="Button Image" class="create"
+                    onclick="window.location.href='/toMemoCreate'">
+            </div>
+            <div class=" sort">
+                <form th:action="@{/sort}" method="get">
+                    <select id="sortKey" name="sortKey">
+                        <option value="id" th:selected="${session.sortKey == null or session.sortKey == 'id'}">作成順
+                        </option>
+                        <option value="title" th:selected="${session.sortKey == 'title'}">タイトル</option>
+                        <option value="create_time" th:selected="${session.sortKey == 'create_time'}">更新日時</option>
+                    </select>
+                    <select id="sortDirection" name="sortDirection">
+                        <option value="asc"
+                            th:selected="${session.sortDirection == null or session.sortDirection == 'asc'}">昇順</option>
+                        <option value="desc" th:selected="${session.sortDirection == 'desc'}">降順</option>
+                    </select>
+                    <button type="submit">ソート</button>
+                </form>
+            </div>
         </div>
-        <h1>メモ</h1>
-        <div class=" sort">
-            <form th:action="@{/sort}" method="get">
-                <select id="sortKey" name="sortKey">
-                    <option value="id" th:selected="${session.sortKey == null or session.sortKey == 'id'}">作成順</option>
-                    <option value="title" th:selected="${session.sortKey == 'title'}">タイトル</option>
-                    <option value="create_time" th:selected="${session.sortKey == 'create_time'}">更新日時</option>
-                </select>
-                <select id="sortDirection" name="sortDirection">
-                    <option value="asc"
-                        th:selected="${session.sortDirection == null or session.sortDirection == 'asc'}">昇順</option>
-                    <option value="desc" th:selected="${session.sortDirection == 'desc'}">降順</option>
-                </select>
-                <button type="submit">ソート</button>
-            </form>
-        </div>
-        <div>
+        <div class="dataArea">
             <table>
                 <thead>
                     <tr>
@@ -40,13 +43,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="object : ${sortMemoList}">
+                    <tr th:each="object : ${session.sortMemoList}">
                         <td class="col1" th:text="${object.title}"></td>
-                        <td class="col2" th:text="${#dates.format(object.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td class="col2" th:text="${#dates.format(object.create_time, 'yyyy/MM/dd HH:mm')}"></td>
                         <td class="col3">
                             <form th:action="@{/select}" method="post" style="display: inline;">
                                 <input type="hidden" name="id" th:value="${object.id}" />
-                                <button type="submit">参照</button>
+                                <button type="submit">表示</button>
                             </form>
                             <form th:action="@{/delete}" method="post" style="display: inline;">
                                 <input type="hidden" name="id" th:value="${object.id}" />
@@ -56,6 +59,10 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <!-- メッセージ -->
+        <div>
+            <p class="message" th:text="${message}"></p>
         </div>
     </div>
 </body>
